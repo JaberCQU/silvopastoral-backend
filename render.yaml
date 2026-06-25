@@ -1,0 +1,40 @@
+# ============================================================
+# Render.com deployment blueprint
+# ============================================================
+# This file lets Render auto-configure both the API service and
+# a managed PostgreSQL database from one click ("New > Blueprint"
+# pointed at this repo), instead of manually clicking through
+# Render's dashboard to set everything up.
+#
+# What this creates:
+#   1. A free PostgreSQL database (cq-silvopastoral-db)
+#   2. A free web service running this FastAPI app, with
+#      DATABASE_URL automatically wired to the database above
+#
+# After deploying, set ALLOWED_ORIGINS in the Render dashboard
+# (Environment tab) to your GitHub Pages URL, e.g.:
+#   https://jabercqu.github.io
+# ============================================================
+
+databases:
+  - name: cq-silvopastoral-db
+    plan: free
+    databaseName: silvopastoral
+    user: silvopastoral
+
+services:
+  - type: web
+    name: cq-silvopastoral-api
+    runtime: python
+    plan: free
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "uvicorn app.main:app --host 0.0.0.0 --port $PORT"
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: cq-silvopastoral-db
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ALLOWED_ORIGINS
+        value: "https://jabercqu.github.io"

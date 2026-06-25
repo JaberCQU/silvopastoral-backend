@@ -1,0 +1,20 @@
+# Environment secrets -- never commit real credentials
+.env
+
+# Local SQLite database file (dev only -- production uses Postgres)
+*.db
+*.sqlite3
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+env/
+*.egg-info/
+
+# Editor/OS cruft
+.vscode/
+.idea/
+.DS_Store
