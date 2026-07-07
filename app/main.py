@@ -12,7 +12,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import get_settings
 from app.database import Base, engine
-from app.routers import auth, stations, scenarios, reference
+from app.routers import auth, stations, scenarios, reference, admin
 
 settings = get_settings()
 
@@ -27,7 +27,7 @@ app = FastAPI(
     description="Backend for the Central Queensland silvopastoral decision-support tool. "
                  "Provides user accounts, saved station/scenario storage, and species/region "
                  "reference data for the GitHub Pages frontend.",
-    version="2.0.0",
+    version="2.1.0",
 )
 
 app.add_middleware(
@@ -42,10 +42,11 @@ app.include_router(auth.router)
 app.include_router(stations.router)
 app.include_router(scenarios.router)
 app.include_router(reference.router)
+app.include_router(admin.router)
 
 
 @app.get("/", tags=["health"])
 def health_check():
     """Simple endpoint to confirm the API is running -- useful for
     Render/Railway health checks and for a quick manual sanity check."""
-    return {"status": "ok", "service": "cq-silvopastoral-api", "version": "2.0.0"}
+    return {"status": "ok", "service": "cq-silvopastoral-api", "version": "2.1.0"}
