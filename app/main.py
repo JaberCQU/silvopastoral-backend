@@ -12,7 +12,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import get_settings
 from app.database import Base, engine
-from app.routers import auth, stations, scenarios, reference, admin, bootstrap
+from app.routers import auth, stations, scenarios, reference, admin
 
 settings = get_settings()
 
@@ -43,7 +43,7 @@ app.include_router(stations.router)
 app.include_router(scenarios.router)
 app.include_router(reference.router)
 app.include_router(admin.router)
-app.include_router(bootstrap.router)
+
 
 @app.get("/", tags=["health"])
 def health_check():
