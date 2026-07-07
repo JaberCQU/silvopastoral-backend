@@ -12,7 +12,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import get_settings
 from app.database import Base, engine
-from app.routers import auth, stations, scenarios, reference, admin, bootsrap
+from app.routers import auth, stations, scenarios, reference, admin, bootstrap
 
 settings = get_settings()
 
