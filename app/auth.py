@@ -77,3 +77,22 @@ def get_current_user(
     if user is None:
         raise credentials_exception
     return user
+
+
+def require_admin(current_user: models.User = Depends(get_current_user)) -> models.User:
+    """
+    FastAPI dependency that builds on get_current_user, additionally
+    requiring the logged-in user to have role == 'admin'. Raises 403
+    (not 401 -- the user IS authenticated, they just lack permission)
+    if they aren't an admin.
+
+    Usage in a protected admin-only route:
+        def my_admin_route(current_user: models.User = Depends(require_admin)):
+            ...
+    """
+    if current_user.role != "admin":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="This action requires admin privileges",
+        )
+    return current_user
