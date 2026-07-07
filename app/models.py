@@ -26,7 +26,12 @@ class User(Base):
     email         = Column(String, unique=True, index=True, nullable=False)
     full_name     = Column(String, nullable=False)
     password_hash = Column(String, nullable=False)
-    role          = Column(String, default="owner")  # owner | consultant | admin
+    role          = Column(String, default="farmer")   # farmer | investor | admin
+    tier          = Column(String, default="free")      # free | premium -- not yet enforced
+                                                          # anywhere; this is a data-model
+                                                          # placeholder an admin can toggle,
+                                                          # ready for real restrictions/payment
+                                                          # integration later.
     created_at    = Column(DateTime(timezone=True), server_default=func.now())
 
     stations = relationship("Station", back_populates="owner", cascade="all, delete-orphan")
