@@ -18,7 +18,10 @@ class UserCreate(BaseModel):
     email: EmailStr
     full_name: str
     password: str
-    role: str = "owner"
+    role: str = "farmer"   # farmer | investor -- "admin" cannot be self-assigned at
+                              # registration; only an existing admin can promote a user
+                              # via the admin endpoint, to prevent anyone registering
+                              # themselves straight into the admin role.
 
 
 class UserLogin(BaseModel):
@@ -32,12 +35,21 @@ class UserOut(BaseModel):
     email: EmailStr
     full_name: str
     role: str
+    tier: str
     created_at: datetime
 
 
 class Token(BaseModel):
     access_token: str
     token_type: str = "bearer"
+
+
+class TierUpdate(BaseModel):
+    tier: str  # "free" or "premium"
+
+
+class RoleUpdate(BaseModel):
+    role: str  # "farmer", "investor", or "admin"
 
 
 # ---- Stations ------------------------------------------------
