@@ -18,11 +18,20 @@ def register(payload: schemas.UserCreate, db: Session = Depends(get_db)):
     if existing:
         raise HTTPException(status_code=400, detail="An account with this email already exists")
 
+    # Security: regardless of what role the client sends, registration
+    # can only ever create a "farmer" or "investor" account. The admin
+    # role can ONLY be granted by an existing admin via the
+    # PUT /admin/users/{id}/role endpoint -- this stops anyone from
+    # registering themselves straight into admin access by simply
+    # sending {"role": "admin"} in the request body.
+    safe_role = payload.role if payload.role in ("farmer", "investor") else "farmer"
+
     user = models.User(
         email=payload.email,
         full_name=payload.full_name,
         password_hash=auth.hash_password(payload.password),
-        role=payload.role,
+        role=safe_role,
+        tier="free",
     )
     db.add(user)
     db.commit()
