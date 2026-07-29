@@ -1,12 +1,6 @@
 # ============================================================
 # Pydantic schemas -- API request and response shapes
 # ============================================================
-# These are deliberately separate from the SQLAlchemy models in
-# models.py. The DB models describe what's stored; these schemas
-# describe what the API accepts and returns. Keeping them separate
-# means we never accidentally leak a password_hash in a response,
-# and the API contract can evolve independently of the DB schema.
-# ============================================================
 
 from pydantic import BaseModel, EmailStr, ConfigDict
 from datetime import datetime
@@ -18,10 +12,7 @@ class UserCreate(BaseModel):
     email: EmailStr
     full_name: str
     password: str
-    role: str = "farmer"   # farmer | investor -- "admin" cannot be self-assigned at
-                              # registration; only an existing admin can promote a user
-                              # via the admin endpoint, to prevent anyone registering
-                              # themselves straight into the admin role.
+    role: str = "farmer"
 
 
 class UserLogin(BaseModel):
@@ -68,6 +59,8 @@ class StationOut(BaseModel):
     region: str
     total_hectares: float
     created_at: datetime
+    owner_email: str = ""   # owner's email, added by the route layer
+                             # (not a database column, populated via join)
 
 
 # ---- Scenarios -----------------------------------------------
