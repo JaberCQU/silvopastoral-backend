@@ -12,11 +12,8 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import get_settings
 from app.database import Base, engine
-from app.routers import auth, stations, scenarios, reference, admin
+from app.routers import auth, stations, scenarios, reference, admin, forum
 
-from app.routers import forum          # ← add near other imports
-
-app.include_router(forum.router)       # ← add near other include_router lines
 
 settings = get_settings()
 
@@ -47,6 +44,7 @@ app.include_router(stations.router)
 app.include_router(scenarios.router)
 app.include_router(reference.router)
 app.include_router(admin.router)
+app.include_router(forum.router)
 
 
 @app.get("/", tags=["health"])
