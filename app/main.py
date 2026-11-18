@@ -14,6 +14,10 @@ from app.config import get_settings
 from app.database import Base, engine
 from app.routers import auth, stations, scenarios, reference, admin
 
+from app.routers import forum          # ← add near other imports
+
+app.include_router(forum.router)       # ← add near other include_router lines
+
 settings = get_settings()
 
 # Creates all tables defined in models.py if they don't already
